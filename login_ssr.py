@@ -26,7 +26,7 @@ def login():
         cursor = conn.cursor()
 
         # Verifica si el usuario existe y la contraseña coincide
-        sql = "SELECT * FROM usuarios WHERE usuario = %s AND contrasena = %s"
+        sql = "SELECT * FROM users WHERE user = %s AND password = %s"
         cursor.execute(sql, (usuario, contrasena))
         resultado = cursor.fetchone()
 
@@ -52,4 +52,3 @@ def dashboard():
 def logout():
     session.pop('usuario', None)
     return redirect('/')
-
