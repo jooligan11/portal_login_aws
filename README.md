@@ -7,15 +7,15 @@ Este proyecto es un laboratorio práctico para migrar un portal de acceso en **P
 ## 📂 Estructura del proyecto
 
 login_ssr/ # Carpeta principal del proyecto Flask
-├── login_ssr.py # Aplicación Flask principal
-├── requirements.txt # Dependencias del proyecto
-├── README.md # Documentación del laboratorio
-├── .gitignore # Archivos ignorados por Git (ej. .env, venv/)
-├── .env.example # Variables de entorno de ejemplo (sin credenciales reales)
-├── venv/ # Entorno virtual (ignorado en GitHub)
-├── nginx.conf # Configuración de Nginx para proxy inverso
-└── systemd/
-└── loginapp.service # Archivo de servicio systemd para Gunicorn
+- ├── login_ssr.py # Aplicación Flask principal
+- ├── requirements.txt # Dependencias del proyecto
+- ├── README.md # Documentación del laboratorio
+- ├── .gitignore # Archivos ignorados por Git (ej. .env, venv/)
+- ├── .env.example # Variables de entorno de ejemplo (sin credenciales reales)
+- ├── venv/ # Entorno virtual (ignorado en GitHub)
+- ├── nginx.conf # Configuración de Nginx para proxy inverso
+  - └── systemd/
+  - └── loginapp.service # Archivo de servicio systemd para Gunicorn
 
 ---
 
