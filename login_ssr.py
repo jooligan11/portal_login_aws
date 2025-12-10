@@ -1,20 +1,30 @@
 from flask import Flask, render_template, request, redirect, session, flash
 import pymysql
-from dotenv import load_dotenv
+import boto3
+import json
 import os
 
 app = Flask(__name__)
-load_dotenv()
 app.secret_key = os.getenv("SECRET_KEY", "clave_secreta_segura")  # Necesaria para usar sesiones
 
-# Configuración de la base de datos
-db_config = {
-    "host": os.getenv("DB_HOST"),
-    "port": int(os.getenv("DB_PORT", 3306)),
-    "user": os.getenv("DB_USER"),
-    "password": os.getenv("DB_PASSWORD"),
-    "database": os.getenv("DB_NAME")
-}
+def get_db_config():
+    secret_name = "rds/loginapp"   # nombre de tu secreto en Secrets Manager
+    region_name = "eu-north-1"     # región donde lo guardaste
+
+    client = boto3.client("secretsmanager", region_name=region_name)
+    secret = client.get_secret_value(SecretId=secret_name)
+    secret_dict = json.loads(secret["SecretString"])
+
+    return {
+        "host": secret_dict["host"],
+        "port": int(secret_dict.get("port", 3306)),
+        "user": secret_dict["username"],
+        "password": secret_dict["password"],
+        "database": secret_dict["dbname"]
+    }
+
+# Configuración de la base de datos desde Secrets Manager
+db_config = get_db_config()
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
