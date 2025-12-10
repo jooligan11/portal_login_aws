@@ -137,3 +137,45 @@ flowchart TD
     EC2 --> RDS2
     EC2 --> RDS3
 ```
+## Complemento del proyecto 1: FLask + RDS + AWS Secret Manager
+Integración de AWS Secret Manager para securizar la conexión de la EC2 a RDS con credenciales rotativas almacenadas en la nube.
+
+Archivos modificados: login_ssr.py
+
+---
+
+## 🔑 Arquitectura general
+- **Flask App en EC2**: aplicación web que gestiona login y sesiones.
+- **RDS (MySQL)**: base de datos gestionada en AWS.
+- **Secrets Manager**: almacena las credenciales de RDS de forma segura.
+- **IAM Role en EC2**: otorga permisos mínimos para que la instancia acceda al secreto.
+
+---
+
+## 🟢 Flujo de Autenticación
+
+1. El usuario accede a la aplicación Flask desde la IP pública de la instancia EC2.
+2. Flask obtiene las credenciales de RDS desde **Secrets Manager** usando `boto3`.
+3. La aplicación se conecta a RDS con `pymysql` y valida el login.
+4. El IAM Role de EC2 garantiza que la aplicación pueda leer el secreto sin credenciales estáticas.
+
+---
+
+## 🔒 Política IAM (Principio de mínimo privilegio)
+
+Ejemplo de política personalizada para el Role de EC2:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DescribeSecret"
+      ],
+      "Resource": "arn:aws:secretsmanager:eu-north-1:XXXXXXXXXXX:secret:XXXXXXXX"
+    }
+  ]
+}
